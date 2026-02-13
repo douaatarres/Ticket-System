@@ -1,0 +1,25 @@
+pipeline {
+  agent   any
+
+  stages { 
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/douaatarres/Ticket-System.git'
+      }
+    }
+  
+    stage('SonarQube Analysis') {
+      steps {
+        dir('backend') {
+          withCredentials([string(credentialsId: 'jekins-ticketsystem', variable: 'SONAR_TOKEN')]) {
+            sh '''
+              mvn clean verify sonar:sonar \
+                -Dsonar.login=$SONAR_TOKEN \
+            '''
+            }
+        }
+      }
+    }
+}
+}
+
