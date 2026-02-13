@@ -7,16 +7,32 @@ pipeline {
         git url: 'https://github.com/douaatarres/Ticket-System.git'
       }
     }
-  
+
+    stage('Install Dependencies') {
+      steps {
+        sh '''
+          for dir in auth tickets orders expiration payments client
+          do
+            if [ -f "$dir/package.json" ]; then
+              cd $dir
+              npm install
+              cd ..
+            fi
+          done
+        '''
+      }
+    }
     stage('SonarQube Analysis') {
       steps {
-        dir('backend') {
+        withSonarQubeEnv('sonar') {
           withCredentials([string(credentialsId: 'jekins-ticketsystem', variable: 'SONAR_TOKEN')]) {
             sh '''
-              mvn clean verify sonar:sonar \
-                -Dsonar.login=$SONAR_TOKEN \
+              sonar-scanner \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.sources=. \
+                -Dsonar.login=$SONAR_TOKEN
             '''
-            }
+          }
         }
       }
     }
