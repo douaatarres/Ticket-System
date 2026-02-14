@@ -26,17 +26,19 @@ pipeline {
     }
     stage('SonarQube Analysis') {
       steps {
-        withSonarQubeEnv('sonar') {
-          withCredentials([string(credentialsId: 'jekins-ticketsystem', variable: 'SONAR_TOKEN')]) {
-            sh '''
-              sonar-scanner \
-                -Dsonar.sources=. \
-                -Dsonar.login=$SONAR_TOKEN
-            '''
-          }
+        script {
+            def scannerHome = tool 'sonar'
+            withSonarQubeEnv('sonar') {
+                sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=Ticket-System \
+                    -Dsonar.sources=. \
+                    -Dsonar.login=${SONAR_TOKEN}
+                """
+            }
         }
-      }
     }
+}
 }
 }
 
