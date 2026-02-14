@@ -30,7 +30,6 @@ pipeline {
           withCredentials([string(credentialsId: 'jekins-ticketsystem', variable: 'SONAR_TOKEN')]) {
             sh '''
               sonar-scanner \
-                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
                 -Dsonar.sources=. \
                 -Dsonar.login=$SONAR_TOKEN
             '''
