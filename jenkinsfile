@@ -23,22 +23,16 @@ pipeline {
           done
         '''
       }
-    }  
-    stage('Dependency Check') {
-      steps {
-        sh '''
-          dependency-check.sh \
-          --project "Ticket-System" \
-          --scan . \
-          --format XML \
-          --out dependency-check-report
-        '''
-          dependencyCheckPublisher(
-            pattern: 'dependency-check-report/dependency-check-report.xml',
-            failedTotalCritical: 1
-        )
     }
-}
+
+    stage('OWASP Dependency Check') {
+      steps {
+        dependencyCheck additionalArguments: '--scan . --format XML --failOnCVSS 7',
+                        odcInstallation: 'DP-Check'
+        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+      }
+    }
+    
     stage('SonarQube Analysis') {
       steps {
         script {
