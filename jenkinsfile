@@ -32,8 +32,7 @@ pipeline {
                 sh """
                     ${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Ticket-System \
-                    -Dsonar.sources=. \
-                    -Dsonar.login=${SONAR_TOKEN}
+                    -Dsonar.sources=. 
                 """
             }
         }
