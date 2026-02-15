@@ -42,7 +42,12 @@ pipeline {
                     ${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Ticket-System \
                     -Dsonar.sources=. \
-                    -Dsonar.javascript.lcov.reportPaths=**/coverage/lcov.info
+                    -Dsonar.javascript.lcov.reportPaths=auth/coverage/lcov.info,\
+                    tickets/coverage/lcov.info,\
+                    orders/coverage/lcov.info,\
+                    expiration/coverage/lcov.info,\
+                    payments/coverage/lcov.info
+
 
                 """
             }
