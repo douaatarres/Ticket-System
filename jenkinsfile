@@ -54,6 +54,20 @@ pipeline {
         }
     }
 }
+stage('Build Docker Images') {
+  steps {
+    script {
+      sh '''
+        for dir in auth tickets orders expiration payments client
+        do
+          if [ -f "$dir/Dockerfile" ]; then
+            docker build -t douaa/$dir:${BUILD_NUMBER} ./$dir
+          fi
+        done
+      '''
+        }
+      }
+    }
 }
 }
 
