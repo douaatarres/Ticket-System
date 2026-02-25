@@ -39,32 +39,26 @@ pipeline {
             def scannerHome = tool 'sonar'
             withSonarQubeEnv('sonar') {
                 sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=Ticket-System \
-                    -Dsonar.sources=. \
-                    -Dsonar.javascript.lcov.reportPaths=auth/coverage/lcov.info,\
-                    tickets/coverage/lcov.info,\
-                    orders/coverage/lcov.info,\
-                    expiration/coverage/lcov.info,\
-                    payments/coverage/lcov.info
-
-
+                  ${scannerHome}/bin/sonar-scanner \
+                  -Dsonar.projectKey=Ticket-System \
+                  -Dsonar.sources=. \
+                  -Dsonar.javascript.lcov.reportPaths=auth/coverage/lcov.info,tickets/coverage/lcov.info,orders/coverage/lcov.info,expiration/coverage/lcov.info,payments/coverage/lcov.info
                 """
             }
         }
     }
 }
-stage('Build Docker Images') {
-  steps {
-    script {
-      sh '''
-        for dir in auth tickets orders expiration payments client
-        do
-          if [ -f "$dir/Dockerfile" ]; then
-            docker build -t douaa/$dir:${BUILD_NUMBER} ./$dir
-          fi
-        done
-      '''
+    stage('Build Docker Images') {
+      steps {
+        script {
+          sh '''
+            for dir in auth tickets orders expiration payments client
+            do
+              if [ -f "$dir/Dockerfile" ]; then
+              docker build -t douaa/$dir:${BUILD_NUMBER} ./$dir
+              fi
+            done
+          '''
         }
       }
     }
